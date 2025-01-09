@@ -11,8 +11,6 @@ import SwiftUI
 struct ElClimaApp: App {
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-            
             FistView()
         }
     }
