@@ -16,6 +16,7 @@
 		6932D7762D2F73850024A5E9 /* CloudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D7752D2F73850024A5E9 /* CloudyView.swift */; };
 		6932D7782D2F73A00024A5E9 /* SunnyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D7772D2F73A00024A5E9 /* SunnyView.swift */; };
 		6932D77A2D2F73BC0024A5E9 /* StormyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D7792D2F73BC0024A5E9 /* StormyView.swift */; };
+		69E99F812D30C055009D0A9F /* AnimatedWeatherBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E99F802D30C055009D0A9F /* AnimatedWeatherBackground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		6932D7752D2F73850024A5E9 /* CloudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudyView.swift; sourceTree = "<group>"; };
 		6932D7772D2F73A00024A5E9 /* SunnyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunnyView.swift; sourceTree = "<group>"; };
 		6932D7792D2F73BC0024A5E9 /* StormyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StormyView.swift; sourceTree = "<group>"; };
+		69E99F802D30C055009D0A9F /* AnimatedWeatherBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedWeatherBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 		6932D75F2D2F633E0024A5E9 /* ElClima */ = {
 			isa = PBXGroup;
 			children = (
+				69E99F7F2D30BA85009D0A9F /* Helpers */,
 				6932D7702D2F67A40024A5E9 /* README.md */,
 				6932D7602D2F633E0024A5E9 /* ElClimaApp.swift */,
 				6932D77B2D2F7E250024A5E9 /* Managers */,
@@ -106,6 +109,14 @@
 				6932D7772D2F73A00024A5E9 /* SunnyView.swift */,
 			);
 			path = SubViews;
+			sourceTree = "<group>";
+		};
+		69E99F7F2D30BA85009D0A9F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				69E99F802D30C055009D0A9F /* AnimatedWeatherBackground.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +194,7 @@
 				6932D7782D2F73A00024A5E9 /* SunnyView.swift in Sources */,
 				6932D7742D2F715D0024A5E9 /* FirstView.swift in Sources */,
 				6932D77A2D2F73BC0024A5E9 /* StormyView.swift in Sources */,
+				69E99F812D30C055009D0A9F /* AnimatedWeatherBackground.swift in Sources */,
 				6932D7612D2F633E0024A5E9 /* ElClimaApp.swift in Sources */,
 				6932D7722D2F6AAE0024A5E9 /* LocationManager.swift in Sources */,
 			);
