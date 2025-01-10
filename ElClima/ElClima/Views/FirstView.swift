@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
-import CoreLocationUI
 
 struct FistView: View {
     @EnvironmentObject var locationManager: LocationManager
     @State private var weatherState: WeatherState = .cloudy
+    @State private var showButton = false  // Para controlar la visibilidad del botón
+    @State private var buttonOffset: CGFloat = 0  // Para la animación de salto
     
     enum WeatherState {
         case cloudy, sunny, stormy
@@ -22,9 +23,9 @@ struct FistView: View {
                 .edgesIgnoringSafeArea(.all)
             AnimatedWeatherBackground(weatherState: $weatherState)
                 .edgesIgnoringSafeArea(.all)
-               
+            
             VStack {
-                VStack(spacing: 20) {
+                VStack(spacing: 10) {
                     Text("""
                     Bienvenido a
                     El Clima
@@ -32,36 +33,69 @@ struct FistView: View {
                     .foregroundColor(weatherState == .stormy ? .white : (weatherState == .cloudy ? .blue: .white))
                     .bold()
                     .font(.largeTitle)
-                    Spacer().frame(height: 300)
                     
-                    Text("Por favor comparte, tu ubicación para obtener el clima en tu area")
+                    Spacer()
+                    
+                    Text("Planeas viajar y no sabes que llevar")
+                        .font(.largeTitle)
                         .foregroundColor(weatherState == .stormy ? .white : .black)
                         .padding()
+                        .background(RoundedRectangle(cornerRadius: 30))
+                        .foregroundColor(weatherState == .stormy ? .black : (weatherState == .cloudy ? .blue : .white))
+                    
+                    HStack(spacing: 25) {
+                        Image("question")
+                            .resizable()
+                            .frame(width: 170, height: 100)
+                        
+                        // Botón modificado con animación
+                        if showButton {
+                            Button(action: {
+                                // Acción del botón
+                            }) {
+                                Text("""
+                                    Haz click
+                                    Aqui para ver el clima de la ciudad
+                                    """)
+                                .foregroundColor(weatherState == .stormy ? .white : .black)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color.white.opacity(0.2))
+                                )
+                            }
+                            .offset(y: buttonOffset)
+                            .animation(
+                                Animation
+                                    .interpolatingSpring(mass: 1, stiffness: 100, damping: 10, initialVelocity: 0)
+                                    .repeatForever(autoreverses: true),
+                                value: buttonOffset
+                            )
+                            .transition(.scale.combined(with: .opacity))
+                        }
+                    }
                 }
                 .multilineTextAlignment(.center)
                 .padding()
-                
-                
-                LocationButton(.shareCurrentLocation) {
-                    locationManager.requestLocation()
-                }
-                
-                .cornerRadius(30)
-                .padding(.horizontal, 40)
-                .symbolVariant(.fill)
-                .foregroundColor(.white)
-                
-                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
+            // Timer para el ciclo del clima
             withAnimation(Animation.linear(duration: 10).repeatForever(autoreverses: false)) {
                 cycleWeather()
             }
+            
+            // Timer para mostrar el botón después de 5 segundos
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                withAnimation(.spring()) {
+                    showButton = true
+                }
+                startJumpingAnimation()
+            }
         }
-        
     }
+    
     private func cycleWeather() {
         Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { _ in
             switch weatherState {
@@ -74,6 +108,17 @@ struct FistView: View {
             }
         }
     }
+    
+    private func startJumpingAnimation() {
+        // Animación de salto
+        withAnimation(
+            Animation
+                .easeInOut(duration: 1)
+                .repeatForever(autoreverses: true)
+        ) {
+            buttonOffset = 0
+        }
+    }
 }
 
 #Preview {
@@ -81,109 +126,3 @@ struct FistView: View {
     
 }
 
-struct AnimatedWeatherBackground: View {
-    @Binding var weatherState: FistView.WeatherState
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                switch weatherState {
-                case .cloudy:
-                    CloudyView(geometry: geometry)
-                case .sunny:
-                    SunnyView()
-                case .stormy:
-                    StormyView(geometry: geometry)
-                }
-            }
-        }
-    }
-}
-
-
-import SwiftUI
-
-struct WeatherView: View {
-    @State private var isAnimating = true
-    
-    var body: some View {
-        ZStack {
-            // Fondo con gradiente animado
-            LinearGradient(
-                colors: [Color(#colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)), Color(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1))],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-            
-            VStack(spacing: 20) {
-                // Círculo animado con el sol/luna
-                Circle()
-                    .fill(Color.red)
-                    .frame(width: 120, height: 120)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                            .scaleEffect(isAnimating ? 1.5 : 1.0)
-                            .opacity(isAnimating ? 0 : 1)
-                    )
-                    .scaleEffect(isAnimating ? 1.1 : 1.0)
-                
-                // Temperatura
-                Text("23°")
-                    .font(.system(size: 96, weight: .thin))
-                    .foregroundColor(.white)
-                    .opacity(isAnimating ? 1 : 0)
-                
-                // Información del clima
-                VStack(spacing: 10) {
-                    Text("Soleado")
-                        .font(.title)
-                        .foregroundColor(.white)
-                    
-                    Text("Madrid, España")
-                        .font(.title3)
-                        .foregroundColor(.white.opacity(0.8))
-                }
-                .offset(y: isAnimating ? 0 : 50)
-                .opacity(isAnimating ? 1 : 0)
-                
-                // Detalles adicionales
-                HStack(spacing: 40) {
-                    WeatherDetailView(icon: "wind", value: "12 km/h")
-                    WeatherDetailView(icon: "humidity", value: "64%")
-                    WeatherDetailView(icon: "thermometer", value: "24°")
-                }
-                .offset(y: isAnimating ? 0 : 100)
-                .opacity(isAnimating ? 1 : 0)
-            }
-        }
-        .onAppear {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.8)) {
-                isAnimating = true
-            }
-        }
-    }
-}
-
-struct WeatherDetailView: View {
-    let icon: String
-    let value: String
-    
-    var body: some View {
-        VStack {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.white)
-            Text(value)
-                .foregroundColor(.white)
-                .font(.subheadline)
-        }
-    }
-}
-
-struct WeatherView_Previews: PreviewProvider {
-    static var previews: some View {
-        WeatherView()
-    }
-}
